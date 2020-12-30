@@ -36,13 +36,17 @@ bool apex::is_in_game()
 
 void apex::set_highlight(std::byte* entity)
 {
-	memcpy((bool*)(entity + GLOW), new bool(true), sizeof(bool));
-	memcpy((int*)(entity + HIGHLIGHT_CONTEXT), new int(1), sizeof(int));
-	memcpy((float*)(entity + GLOW_RANGE), new float(INFINITY), sizeof(float));
+	static const bool glow = true;
+	static const bool highlightcontext = 1;
+	static const float infinity = INFINITY;
+
+	memcpy((bool*)(entity + GLOW), &glow, sizeof(bool));
+	memcpy((int*)(entity + HIGHLIGHT_CONTEXT), &highlightcontext, sizeof(int));
+	memcpy((float*)(entity + GLOW_RANGE), &infinity, sizeof(float));
 
 	for (auto i = GLOW_DURATION; i < GLOW_DURATION + 0x18; i += 0x4)
-		memcpy((float*)(entity + i), new float(INFINITY), sizeof(float));
-
+		memcpy((float*)(entity + i), &infinity, sizeof(float));
+	
 	static const float color[3] = {
 		((SRGB >> 16) & 0xff) * BRIGHTNESS,
 		((SRGB >> 8) & 0xff) * BRIGHTNESS,
@@ -62,10 +66,7 @@ void apex::highlight_loop()
 			if (!entity) { continue; }
 			auto entity_type = apex::get_entity_type(entity);
 			if (strcmp(entity_type.c_str(), "player") == 0)
-			{
-				if (!apex::is_in_game()) { break; }
 				apex::set_highlight(entity);
-			}
 		}
 	}
 }
