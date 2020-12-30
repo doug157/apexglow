@@ -37,7 +37,7 @@ bool apex::is_in_game()
 void apex::set_highlight(std::byte* entity)
 {
 	static const bool glow = true;
-	static const bool highlightcontext = 1;
+	static const int highlightcontext = 1;
 	static const float infinity = INFINITY;
 
 	memcpy((bool*)(entity + GLOW), &glow, sizeof(bool));
